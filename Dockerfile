@@ -1,15 +1,15 @@
 FROM ubuntu:14.04
-MAINTAINER Sharoon Thomas <sharoon.thomas@openlabs.co.in>
+MAINTAINER Denis Andrejew <da.colonel@gmail.com>
 
 RUN sed 's/main$/main universe/' -i /etc/apt/sources.list
-RUN apt-get update
-RUN apt-get upgrade -y
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y build-essential xorg libssl-dev libxrender-dev wget xz-utils && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Download and install wkhtmltopdf
-RUN apt-get install -y build-essential xorg libssl-dev libxrender-dev wget gdebi
-RUN wget http://downloads.sourceforge.net/project/wkhtmltopdf/0.12.2.1/wkhtmltox-0.12.2.1_linux-trusty-amd64.deb
-RUN gdebi --n wkhtmltox-0.12.2.1_linux-trusty-amd64.deb
-ENTRYPOINT ["wkhtmltopdf"]
+RUN wget http://download.gna.org/wkhtmltopdf/0.12/0.12.3/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz -O wkhtmltox.tar.xz && \
+    tar xf wkhtmltox.tar.xz
+ENTRYPOINT ["wkhtmltox/bin/wkhtmltopdf"]
 
-# Show the extended help
 CMD ["-h"]
